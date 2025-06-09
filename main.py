@@ -1,5 +1,4 @@
 from fastapi import FastAPI, HTTPException, Request
-from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 import json
@@ -7,14 +6,6 @@ from datetime import datetime
 from pathlib import Path
 
 app = FastAPI()
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 LICENSES_FILE = Path(__file__).parent / 'licenses.json'
 
@@ -65,7 +56,6 @@ async def verify_license(request: LicenseRequest):
         expires_at=license_info["expires_at"]
     )
 
-# Catch-all exception handler for debugging
 @app.exception_handler(Exception)
 async def generic_exception_handler(request: Request, exc: Exception):
     return JSONResponse(
